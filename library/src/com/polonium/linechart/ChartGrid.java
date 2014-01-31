@@ -11,8 +11,8 @@ class ChartGrid {
     int stepHor = 10;
     int stepVer = 10;
 
-    int horSubLinesCount = 3;
-    int verSubLinesCount = 3;
+    int horSubLinesCount = 0;
+    int verSubLinesCount = 0;
 
     boolean horMainLinesEnabled = true;
     boolean horSubLinesEnabled = true;

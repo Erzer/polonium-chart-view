@@ -3,8 +3,10 @@ package com.polonium.linechart;
 import java.util.ArrayList;
 
 import com.polonium.linechart.LinePoint.Type;
+import com.polonium.linechart.R;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapShader;
@@ -88,8 +90,14 @@ public class LineChartView extends View {
      */
     public LineChartView(Context context) {
         super(context);
-        init(context);
+        initDefault(context);
 
+    }
+
+    public LineChartView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        initDefault(context);
+        setAttr(context, attrs);
     }
 
     /**
@@ -102,7 +110,61 @@ public class LineChartView extends View {
      */
     public LineChartView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        initDefault(context);
+        setAttr(context, attrs);
+    }
+
+    private void setAttr(Context context, AttributeSet attrs) {
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.LineChartView);
+        int color = 0;
+        float dim = 0;
+
+        mGrid.stepVer = a.getInt(R.styleable.LineChartView_horizontal_grid_step, mGrid.stepVer);
+        mGrid.stepHor = a.getInt(R.styleable.LineChartView_vertical_grid_step, mGrid.stepHor);
+        mGrid.horSubLinesCount = a.getInt(R.styleable.LineChartView_horizontal_grid_sublines_count,
+                                          mGrid.horSubLinesCount);
+        mGrid.verSubLinesCount = a.getInt(R.styleable.LineChartView_vertical_grid_sublines_count,
+                                          mGrid.verSubLinesCount);
+        mGrid.verMainLinesEnabled = a.getBoolean(R.styleable.LineChartView_vertical_grid, mGrid.verMainLinesEnabled);
+        mGrid.verSubLinesEnabled = a.getBoolean(R.styleable.LineChartView_vertical_grid_sublines,
+                                                mGrid.verSubLinesEnabled);
+        mGrid.horMainLinesEnabled = a.getBoolean(R.styleable.LineChartView_horizontal_grid, mGrid.horMainLinesEnabled);
+        mGrid.horSubLinesEnabled = a.getBoolean(R.styleable.LineChartView_horizontal_grid_sublines,
+                                                mGrid.horSubLinesEnabled);
+        color = a.getColor(R.styleable.LineChartView_horizontal_grid_color, mGrid.mainHorLinesPaint.getColor());
+        mGrid.mainHorLinesPaint.setColor(color);
+        color = a.getColor(R.styleable.LineChartView_vertical_grid_color, mGrid.mainVerLinesPaint.getColor());
+        mGrid.mainVerLinesPaint.setColor(color);
+        color = a.getColor(R.styleable.LineChartView_horizontal_grid_sublines_color, mGrid.subHorLinesPaint.getColor());
+        mGrid.subHorLinesPaint.setColor(color);
+        color = a.getColor(R.styleable.LineChartView_vertical_grid_sublines_color, mGrid.subVerLinesPaint.getColor());
+        mGrid.subVerLinesPaint.setColor(color);
+        // grid thikness
+        dim = a.getDimension(R.styleable.LineChartView_horizontal_grid_thikness,
+                             mGrid.mainHorLinesPaint.getStrokeWidth());
+        mGrid.mainHorLinesPaint.setStrokeWidth(dim);
+        dim = a.getDimension(R.styleable.LineChartView_vertical_grid_thikness, mGrid.mainVerLinesPaint.getStrokeWidth());
+        mGrid.mainVerLinesPaint.setStrokeWidth(dim);
+        dim = a.getDimension(R.styleable.LineChartView_horizontal_grid_sublines_thikness,
+                             mGrid.subHorLinesPaint.getStrokeWidth());
+        mGrid.subHorLinesPaint.setStrokeWidth(dim);
+        dim = a.getDimension(R.styleable.LineChartView_vertical_grid_sublines_thikness,
+                             mGrid.subVerLinesPaint.getStrokeWidth());
+        mGrid.subVerLinesPaint.setStrokeWidth(dim);
+        // values color
+        color = a.getColor(R.styleable.LineChartView_horizontal_values_color, mGrid.mainHorValuesPaint.getColor());
+        mGrid.mainHorValuesPaint.setColor(color);
+        color = a.getColor(R.styleable.LineChartView_vertical_values_color, mGrid.mainVerValuesPaint.getColor());
+        mGrid.mainVerValuesPaint.setColor(color);
+
+        dim = a.getDimension(R.styleable.LineChartView_horizontal_values_size, mGrid.mainHorValuesPaint.getTextSize());
+        mGrid.mainHorValuesPaint.setTextSize(dim);
+        dim = a.getDimension(R.styleable.LineChartView_vertical_values_size, mGrid.mainVerValuesPaint.getTextSize());
+        mGrid.mainVerValuesPaint.setTextSize(dim);
+        mGrid.horMainValuesEnabled = a.getBoolean(R.styleable.LineChartView_horizontal_values,
+                                                  mGrid.horMainValuesEnabled);
+        mGrid.verMainValuesEnabled = a.getBoolean(R.styleable.LineChartView_vertical_values, mGrid.verMainValuesEnabled);
+        a.recycle();
     }
 
     /**
@@ -111,7 +173,7 @@ public class LineChartView extends View {
      * @param context
      *            the context
      */
-    private void init(Context context) {
+    private void initDefault(Context context) {
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mGrid = new ChartGrid(context);
         setViewPortMargins(0,
@@ -575,9 +637,13 @@ public class LineChartView extends View {
      * @see android.view.View#onDraw(android.graphics.Canvas)
      */
     public void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (isInEditMode()) {
+            return;
+        }
         inertionMove();
         if (cropViewPortShader == null) {
-            Bitmap cropBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Config.ALPHA_8);
+            Bitmap cropBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Config.ALPHA_8);
             Canvas cropCanvas = new Canvas(cropBitmap);
 
             Paint cropPaint = new Paint();
