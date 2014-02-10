@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Chart Demo</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="description_default">Default chart presentation. Just one Line added.\nIf lines has points outside of view port, chart can scroll by gestures.</string>
+    <string name="description_multiline">Chart can show more than 1 line. Line can use different colors, width, stroke effects and custom Paint. Also chart can be filled under line with custom color using alpha.</string>
+    <string name="description_marked_points">Lines can show positons of the key points. Markers has different shape and can be customized with colors.\nClick on point can be interctive.</string>
+    <string name="description_smooth">Lines can be smooth by spline approximation with different number of additional points.</string>
+    <string name="description_custom">Chart grid and view port also has customization. We can setup margins for all elements. Grid main and sub lines can be customized by different Paint.\nGrid text can be replased.</string>
+
+</resources>
