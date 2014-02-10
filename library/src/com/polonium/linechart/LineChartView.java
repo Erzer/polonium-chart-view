@@ -715,13 +715,13 @@ public class LineChartView extends View {
     }
 
     private void drawPoint(Canvas canvas, LinePoint point) {
-        float x = point.getX() * mScaleX - mViewPortLeft * mScaleX + mViewPortMarginLeft;
-        float y = point.getY() * (-mScaleY) + mViewPortTop * mScaleY + mViewPortMarginTop;
         if (point.isVisible()) {
-            if (point.getX() + (point.getRadius() + point.getStrokePaint().getStrokeWidth()) > mViewPortMarginLeft && point.getX() - (point.getRadius() + point.getStrokePaint()
-                                                                                                                                                               .getStrokeWidth()) < getWidth() - mViewPortMarginRight
-                && point.getY() + (point.getRadius() + point.getStrokePaint().getStrokeWidth()) > mViewPortMarginTop
-                && point.getY() - (point.getRadius() + point.getStrokePaint().getStrokeWidth()) < getHeight() - mViewPortMarginBottom) {
+            float x = point.getX() * mScaleX - mViewPortLeft * mScaleX + mViewPortMarginLeft;
+            float y = point.getY() * (-mScaleY) + mViewPortTop * mScaleY + mViewPortMarginTop;
+            if (x + (point.getRadius() + point.getStrokePaint().getStrokeWidth()) > mViewPortMarginLeft 
+                    && x - (point.getRadius() + point.getStrokePaint().getStrokeWidth()) < getWidth() - mViewPortMarginRight
+                && y + (point.getRadius() + point.getStrokePaint().getStrokeWidth()) > mViewPortMarginTop
+                && y - (point.getRadius() + point.getStrokePaint().getStrokeWidth()) < getHeight() - mViewPortMarginBottom) {
                 point.getFillPaint().setShader(cropViewPortShader);
                 point.getStrokePaint().setShader(cropViewPortShader);
                 if (point.getType() == Type.CIRCLE) {
