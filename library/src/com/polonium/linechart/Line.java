@@ -7,24 +7,26 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.PathEffect;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
 /**
  * Class for holding line data for drawing in {@link com.polonium.linechart.LineChartView LineChartView}
  */
 public class Line {
-    
+
     private ArrayList<LinePoint> mPoints = new ArrayList<LinePoint>();
     private Paint mPaint;
     private Paint mFilledPaint;
     private Path mPath = new Path();
     private boolean isFilled = false;
     private Path mFilledPath = new Path();
+    private DisplayMetrics displayMetrics;
 
     /**
      * Getter for points which creates line.
-     *
-     * @return points 
+     * 
+     * @return points
      */
     public ArrayList<LinePoint> getPoints() {
         return mPoints;
@@ -32,13 +34,14 @@ public class Line {
 
     /**
      * Instantiates a new line.
-     *
-     * @param context context
+     * 
+     * @param context
+     *            context
      */
     public Line(Context context) {
         init(context);
     }
-    
+
     private void init(Context context) {
         if (mPaint == null) {
             mPaint = new Paint();
@@ -53,6 +56,7 @@ public class Line {
             mFilledPaint.setColor(0x440099cc);
             mFilledPaint.setStyle(Style.FILL);
         }
+        displayMetrics = context.getResources().getDisplayMetrics();
     }
 
     private void buildPath() {
@@ -75,15 +79,15 @@ public class Line {
 
     /**
      * Smooth line with spline interpolation. Don't adds new points to line, just smooth path for drawing.
-     *
-     * @param subPoints count of sub points
+     * 
+     * @param subPoints
+     *            count of sub points
      * @return this
      */
     public Line smoothLine(int subPoints) {
-        double [] dataX = new double[mPoints.size()];
-        double [] dataY = new double[mPoints.size()];
-        for (int i = 0; i < mPoints.size(); i++)
-        {
+        double[] dataX = new double[mPoints.size()];
+        double[] dataY = new double[mPoints.size()];
+        for (int i = 0; i < mPoints.size(); i++) {
             dataX[i] = mPoints.get(i).getX();
             dataY[i] = mPoints.get(i).getY();
         }
@@ -91,13 +95,12 @@ public class Line {
         mPath.moveTo(mPoints.get(0).getX(), mPoints.get(0).getY());
         Spline sp = new Spline(dataX, dataY);
         for (int i = 0; i < mPoints.size() - 1; i += 1) {
-            double step = (dataX[i+1] - dataX[i])/(subPoints+1);
-            for (int j = 1; j <= subPoints; j++)
-            {
-                double x = dataX[i]+step*j;
-                mPath.lineTo((float)x, (float)sp.spline_value(x));
+            double step = (dataX[i + 1] - dataX[i]) / (subPoints + 1);
+            for (int j = 1; j <= subPoints; j++) {
+                double x = dataX[i] + step * j;
+                mPath.lineTo((float) x, (float) sp.spline_value(x));
             }
-            mPath.lineTo((float)dataX[i+1], (float)dataY[i+1]);
+            mPath.lineTo((float) dataX[i + 1], (float) dataY[i + 1]);
         }
         if (isFilled) {
             mFilledPath = new Path(mPath);
@@ -110,7 +113,7 @@ public class Line {
 
     /**
      * Gets the {@link {@link android.graphics.Path Path}. For line drawing.
-     *
+     * 
      * @return path
      */
     Path getPath() {
@@ -119,7 +122,7 @@ public class Line {
 
     /**
      * Gets {@link {@link android.graphics.Path Path} for filling underline space.
-     *
+     * 
      * @return the filled path
      */
     Path getFilledPath() {
@@ -128,8 +131,9 @@ public class Line {
 
     /**
      * Sets the points.
-     *
-     * @param points points
+     * 
+     * @param points
+     *            points
      * @return this
      */
     public Line setPoints(ArrayList<LinePoint> points) {
@@ -140,8 +144,9 @@ public class Line {
 
     /**
      * Adds the point at the end of the line.
-     *
-     * @param point the point
+     * 
+     * @param point
+     *            the point
      * @return this
      */
     public Line addPoint(LinePoint point) {
@@ -161,8 +166,9 @@ public class Line {
 
     /**
      * Removes the point.
-     *
-     * @param point point from line
+     * 
+     * @param point
+     *            point from line
      * @return this
      */
     public Line removePoint(LinePoint point) {
@@ -173,8 +179,9 @@ public class Line {
 
     /**
      * Gets the point by index.
-     *
-     * @param index index of the point
+     * 
+     * @param index
+     *            index of the point
      * @return point with <i>index</i>
      */
     public LinePoint getPoint(int index) {
@@ -183,9 +190,11 @@ public class Line {
 
     /**
      * Gets the point with coords.
-     *
-     * @param x x
-     * @param y y
+     * 
+     * @param x
+     *            x
+     * @param y
+     *            y
      * @return point
      */
     public LinePoint getPoint(float x, float y) {
@@ -199,7 +208,7 @@ public class Line {
 
     /**
      * Points count.
-     *
+     * 
      * @return count
      */
     public int getPointsCount() {
@@ -208,7 +217,7 @@ public class Line {
 
     /**
      * {@link android.graphics.Paint Paint} for line drawing.
-     *
+     * 
      * @return paint
      */
     public Paint getPaint() {
@@ -217,8 +226,9 @@ public class Line {
 
     /**
      * Sets {@link android.graphics.Paint Paint} for line drawing.
-     *
-     * @param paint paint
+     * 
+     * @param paint
+     *            paint
      * @return this
      */
     public Line setPaint(Paint paint) {
@@ -228,8 +238,9 @@ public class Line {
 
     /**
      * Show or hide underline space fill with {@link android.graphics.Paint Paint} setted by {@link #setFilledPaint}.
-     *
-     * @param isFilled is need fill underline space.
+     * 
+     * @param isFilled
+     *            is need fill underline space.
      * @return this
      */
     public Line setFilled(boolean isFilled) {
@@ -240,7 +251,7 @@ public class Line {
 
     /**
      * Checks if underline space filled.
-     *
+     * 
      * @return true, if need fill underline space
      */
     public boolean isFilled() {
@@ -256,8 +267,9 @@ public class Line {
 
     /**
      * Sets {@link android.graphics.Paint Paint} for underline space fill.
-     *
-     * @param paint the paint
+     * 
+     * @param paint
+     *            the paint
      * @return the line
      */
     public Line setFilledPaint(Paint paint) {
@@ -267,8 +279,9 @@ public class Line {
 
     /**
      * Sets the color for Line.
-     *
-     * @param color color in #AARRGGBB
+     * 
+     * @param color
+     *            color in #AARRGGBB
      * @return this
      */
     public Line setColor(int color) {
@@ -278,8 +291,9 @@ public class Line {
 
     /**
      * Sets color for underline fill.
-     *
-     * @param color color in #AARRGGBB
+     * 
+     * @param color
+     *            color in #AARRGGBB
      * @return this
      */
     public Line setFilledColor(int color) {
@@ -289,15 +303,28 @@ public class Line {
 
     /**
      * Sets the path effect.
-     *
-     * @param pe {@link android.graphics.PathEffect PathEffect} for line drawing
+     * 
+     * @param pe
+     *            {@link android.graphics.PathEffect PathEffect} for line drawing
      * @return this
      */
     public Line setPathEffect(PathEffect pe) {
         mPaint.setPathEffect(pe);
         return this;
     }
-    
+
+    /**
+     * Sets line stroke width.
+     * 
+     * @param widthDp
+     *            width in dp
+     * @return this
+     */
+    public Line setStrokeWidth(float widthDp) {
+        mPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, widthDp, displayMetrics));
+        return this;
+    }
+
     private static double[] linSolve(double[][] matrix) {
         double[] results = new double[matrix.length];
         int[] order = new int[matrix.length];
@@ -351,7 +378,7 @@ public class Line {
         }
         return results;
     }
-   
+
     public static float polyInterpolate(float[] dataX, float[] dataY, double x, int power) {
         int xIndex = 0;
         while (xIndex < dataX.length - (1 + power + (dataX.length - 1) % power) && dataX[xIndex + power] < x) {
@@ -371,6 +398,6 @@ public class Line {
         for (int i = 0; i < coefficients.length; ++i) {
             answer += coefficients[i] * Math.pow(x, (power - i));
         }
-        return (float)answer;
+        return (float) answer;
     }
 }
