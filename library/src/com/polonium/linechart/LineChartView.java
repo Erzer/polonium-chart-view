@@ -779,7 +779,7 @@ public class LineChartView extends View {
     }
 
     private void drawVerticalGrid(Canvas canvas) {
-        int firstLertLineX = (((int) mViewPortLeft) / mGrid.stepHor) * mGrid.stepHor;
+        int firstLertLineX = (((int) mViewPortLeft) / mGrid.stepHor - 1) * mGrid.stepHor;
         float subStep = (float) mGrid.stepHor / (mGrid.horSubLinesCount + 1);
         mGrid.mainVerLinesPaint.setShader(cropViewPortShader);
         mGrid.subVerLinesPaint.setShader(cropViewPortShader);
