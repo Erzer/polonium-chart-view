@@ -192,6 +192,7 @@ public class LineChartView extends View {
                                                       20,
                                                       getResources().getDisplayMetrics()));
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
+        setViewPort(0, 0, 100, 100);
     }
 
     /**
