@@ -22,6 +22,23 @@ public class Line {
     private boolean isFilled = false;
     private Path mFilledPath = new Path();
     private DisplayMetrics displayMetrics;
+    private String mName = "Default";
+
+    /**
+     * get line name
+     * @return name
+     */
+    public String getName() {
+        return mName;
+    }
+
+    /**
+     * Set line name
+     * @param name
+     */
+    public void setName(String name) {
+        this.mName = name;
+    }
 
     /**
      * Getter for points which creates line.

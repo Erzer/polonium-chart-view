@@ -1,6 +1,8 @@
 package com.polonium.linechart;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import com.polonium.linechart.LinePoint.Type;
 import com.polonium.linechart.R;
@@ -470,7 +472,8 @@ public class LineChartView extends View {
     /**
      * Removes all lines.
      * 
-     * @see addLine
+     * @see #addLine
+     *
      */
     public void removeAllLines() {
         while (mLines.size() > 0) {
@@ -495,6 +498,48 @@ public class LineChartView extends View {
             mMinX = point.getX() < mMinX ? point.getX() : mMinX;
             mMinY = point.getY() < mMinY ? point.getY() : mMinY;
         }
+    }
+
+    /**
+     * Swaps the position of two lines
+     * @param indexFirst
+     * @param indexSecond
+     * @return false if indexes are out of bound
+     */
+    public boolean swapLines(int indexFirst, int indexSecond) {
+        boolean result = true;
+
+        try {
+            Collections.swap(mLines, indexFirst, indexSecond);
+        }
+        catch (IndexOutOfBoundsException ie) {
+            result = false;
+        }
+
+        return result;
+    }
+
+    /**
+     * Remove lines by name
+     * @param name line name
+     * @return number of removed lines
+     */
+    public int removeLinesWithName(String name) {
+        List<Line> toRemove = new ArrayList<Line>();
+
+        for (Line line : mLines) {
+            if (line.getName().equals(name)) {
+                toRemove.add(line);
+            }
+        }
+
+        for (Line r : toRemove) {
+            mLines.remove(r);
+        }
+
+        postInvalidate();
+
+        return toRemove.size();
     }
 
     /**
